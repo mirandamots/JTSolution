@@ -3,6 +3,9 @@ package _todoInSection;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableModel;
+
 import model.Student;
 
 /**
@@ -16,9 +19,10 @@ import model.Student;
 // (after adding implements ListModel to the class heading).
 //
 // Note: Some ListModel need not be implemented.
-public class StudentCollection  {
+public class StudentCollection implements TableModel {
 
   private List<Student> theStudents;
+  private final int COLUMN_COUNT = 4;
 
   /**
    * The constructor for a StudentCollection. Initializes the list of
@@ -50,8 +54,8 @@ public class StudentCollection  {
     theStudents.add(newStudent);
   }
 
-  public void get(int index) {
-    this.theStudents.get(index);
+  public Student get(int index) {
+    return theStudents.get(index);
   }
 
   public Student getFirstStudentWithName(String name) {
@@ -61,5 +65,75 @@ public class StudentCollection  {
     }
     return null; // not found
   }
+
+@Override
+public int getRowCount() {	// number of rows	
+	return this.size();
+}
+
+@Override
+public int getColumnCount() {	// number of columns
+	return COLUMN_COUNT;
+}
+
+@Override
+// The name of each column, used to create the headers
+public String getColumnName(int columnIndex) {
+	if(columnIndex == 0)
+		return "Name";
+	else if(columnIndex == 1) 
+		return "Major";
+	else if(columnIndex == 2)
+		return "GPA";
+	else
+		return "Age";
+}
+
+@Override
+public Class<?> getColumnClass(int columnIndex) {	
+	if(columnIndex == 0 || columnIndex == 1)
+		return String.class;	// name/major
+	else if(columnIndex == 2) 
+		return double.class;	// GPA
+	else
+		return int.class;		// age
+}
+
+@Override
+public boolean isCellEditable(int rowIndex, int columnIndex) {
+	return false;	// we don't want the user to be able to edit this
+}
+
+@Override
+public Object getValueAt(int rowIndex, int columnIndex) {
+	Student student = theStudents.get(rowIndex);
+	
+	if(columnIndex == 0)
+		return student.getName();
+	else if(columnIndex == 1) 
+		return student.getMajor();
+	else if(columnIndex == 2)
+		return student.getGPA();
+	else
+		return student.getAge();
+}
+
+@Override
+public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+	// unnecessary
+	
+}
+
+@Override
+public void addTableModelListener(TableModelListener l) {
+	// unnecessary
+	
+}
+
+@Override
+public void removeTableModelListener(TableModelListener l) {
+	// unnecessary
+	
+}
 
 }
